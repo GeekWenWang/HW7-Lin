@@ -20,14 +20,19 @@ int main( int argc, char *argv[])
 
 	//free(dynamicBufferPtr1);
 
-	if ( *argv[0] == 'c')
+	if ( unixDataPtr->cmdName[0] == 'c' && unixDataPtr->cmdName[1] == 'a' && unixDataPtr->cmdName[2]== 't')
 	{
 		unixDataPtr->unixCmd = cat; 
 	}
 
-	else if ( *argv[0] == 'r')
+	else if ( unixDataPtr->cmdName[0] == 'r' && unixDataPtr->cmdName[1] == 'e' && unixDataPtr->cmdName[2] == 'm' &&unixDataPtr->cmdName[3] =='o'&& unixDataPtr->cmdName[4] == 'v'&& unixDataPtr->cmdName[5] == 'e' && unixDataPtr->cmdName[6] == 't' && unixDataPtr->cmdName[7] == 'a' &&unixDataPtr->cmdName[8]=='g')
 	{
 		unixDataPtr->unixCmd = removetag; 
+	}
+
+	else
+	{
+		unixDataPtr->unixCmd = notdefined;
 	}
 
 	switch(unixDataPtr->unixCmd)
@@ -93,6 +98,13 @@ int main( int argc, char *argv[])
 
 		fclose(unixDataPtr->filePtr);
 		
+
+		break;
+
+	case notdefined:
+		cout << "unknown Command" <<endl;
+
+		return 1;
 
 		break;
 
@@ -168,6 +180,11 @@ int main( int argc, char *argv[])
 		fclose(unixDataPtr->filePtr);
 		fclose(unixDataPtr->nextFilePtr);
 	}
+
+	free(unixDataPtr->dynamicBufferPtr);
+	free(unixDataPtr->dynamicBufferPtr1);
+	free(unixDataPtr->dynamicBufferPtr2);
+	free(unixDataPtr->dynamicBufferPtr3);
 	system("pause");
 
 	return 1;
