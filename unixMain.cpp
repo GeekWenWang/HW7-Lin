@@ -114,7 +114,7 @@ int main( int argc, char *argv[])
 		case notdefined:
 			cout << "unknown Command" <<endl;
 
-			return 1;
+			continue;
 
 			break;
 
