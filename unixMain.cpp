@@ -14,17 +14,9 @@ UNIX_DATA *unixDataPtr = &unixData;
 
 int main( int argc, char *argv[])
 {
-	char cmdName[10];
+	readCmd(unixDataPtr);
 
-	char *dynamicBufferPtr1;
-
-	dynamicBufferPtr1 = (char*)malloc(10);
-
-	scanf("%s", cmdName);
-
-	strcpy(dynamicBufferPtr1 , cmdName);
-
-	argv[0] = dynamicBufferPtr1;
+	argv[0] = unixDataPtr->dynamicBufferPtr1;
 
 	//free(dynamicBufferPtr1);
 
@@ -41,175 +33,142 @@ int main( int argc, char *argv[])
 	switch(unixDataPtr->unixCmd)
 	{
 	case cat:
-		char* dynamicBufferPtr;
-		char* dynamicBufferPtr2;
-		int size;
-		char fileName[40];
+		scanf( "%s", &unixDataPtr->fileName);
 
-		scanf( "%s", &fileName);
+		unixDataPtr->dynamicBufferPtr2 = (char*)malloc(40);
 
-		dynamicBufferPtr2 = (char*)malloc(40);
-
-		strcpy(dynamicBufferPtr2, fileName);
+		strcpy(unixDataPtr->dynamicBufferPtr2, unixDataPtr->fileName);
 
 		//argv[1] = dynamicBufferPtr2;
 
 		//free(dynamicBufferPtr2);
+		
+		openFile(unixDataPtr);
 
-		FILE *filePtr;
-
-		char *asciiPtr;
-
-		filePtr = fopen(dynamicBufferPtr2, "r");
-
-		if(filePtr != NULL)
+		if(unixDataPtr->dynamicBufferPtr != NULL)
 		{
-			fseek(filePtr, 1, SEEK_END);
-			size = ftell(filePtr);
-			fseek(filePtr, 1, SEEK_SET);
-
-			dynamicBufferPtr = (char*)malloc(size+1);
-
-			for( int i=0;i<size;i++)
-			{
-				dynamicBufferPtr[i] = '\0';
-			}
+			fread( unixDataPtr->dynamicBufferPtr, sizeof(char), unixDataPtr->size, unixDataPtr->filePtr);
+			unixDataPtr->asciiPtr = unixDataPtr->dynamicBufferPtr;
 		}
 
-		if(dynamicBufferPtr != NULL)
+		for( int i=unixDataPtr->size ; i>0 ;i--)
 		{
-			fread( dynamicBufferPtr, sizeof(char), size, filePtr);
-			asciiPtr = dynamicBufferPtr;
+			printf( "%c", *unixDataPtr->asciiPtr);
+			unixDataPtr->asciiPtr++;
 		}
 
-		for( int i=size ; i>0 ;i--)
-		{
-			printf( "%c", *asciiPtr);
-			asciiPtr++;
-		}
-
-		fclose(filePtr);
-		system("pause");
+		fclose(unixDataPtr->filePtr);
 		break;
 	case removetag:
-		//char* dynamicBufferPtr;
-		//char* dynamicBufferPtr2;
-		//int size;
-		//char fileName[40];
+		scanf( "%s", &unixDataPtr->fileName);
 
-		scanf( "%s", &fileName);
+		unixDataPtr->dynamicBufferPtr2 = (char*)malloc(40);
 
-		dynamicBufferPtr2 = (char*)malloc(40);
-
-		strcpy(dynamicBufferPtr2, fileName);
+		strcpy(unixDataPtr->dynamicBufferPtr2, unixDataPtr->fileName);
 
 		//argv[1] = dynamicBufferPtr2;
 
 		//free(dynamicBufferPtr2);
 
-		//FILE *filePtr;
+		openFile(unixDataPtr);
 
-		//char *asciiPtr;
-
-		filePtr = fopen(dynamicBufferPtr2, "r");
-
-		if(filePtr != NULL)
+		if(unixDataPtr->dynamicBufferPtr != NULL)
 		{
-			fseek(filePtr, 1, SEEK_END);
-			size = ftell(filePtr);
-			fseek(filePtr, 1, SEEK_SET);
-
-			dynamicBufferPtr = (char*)malloc(size+1);
-
-			for( int i=0;i<size;i++)
-			{
-				dynamicBufferPtr[i] = '\0';
-			}
+			fread( unixDataPtr->dynamicBufferPtr, sizeof(char), unixDataPtr->size, unixDataPtr->filePtr);
+			unixDataPtr->asciiPtr = unixDataPtr->dynamicBufferPtr;
 		}
 
-		if(dynamicBufferPtr != NULL)
+		for( int i=unixDataPtr->size ; i>0 ;i--)
 		{
-			fread( dynamicBufferPtr, sizeof(char), size, filePtr);
-			asciiPtr = dynamicBufferPtr;
-		}
-
-		for( int i=size ; i>0 ;i--)
-		{
-			if( *asciiPtr !='='&& *asciiPtr !='+'&& *asciiPtr != ',' && *asciiPtr !='.' && *asciiPtr !='/'&&  *asciiPtr != '"'&& *asciiPtr != '!' && *asciiPtr !='-'&& *asciiPtr !=';'&& *asciiPtr !='('&& *asciiPtr !=')')
+			if( *unixDataPtr->asciiPtr !='='&& *unixDataPtr->asciiPtr !='+'&& *unixDataPtr->asciiPtr != ',' && *unixDataPtr->asciiPtr !='.' && *unixDataPtr->asciiPtr !='/'&&  *unixDataPtr->asciiPtr != '"'&& *unixDataPtr->asciiPtr != '!' && *unixDataPtr->asciiPtr !='-'&& *unixDataPtr->asciiPtr !=';'&& *unixDataPtr->asciiPtr !='('&& *unixDataPtr->asciiPtr !=')')
 			{
-				printf( "%c", *asciiPtr);
-				asciiPtr++;
+				printf( "%c", *unixDataPtr->asciiPtr);
+				unixDataPtr->asciiPtr++;
 			}
 			else
 			{
-				asciiPtr++;
+				unixDataPtr->asciiPtr++;
 			}
 		}
 
-		fclose(filePtr);
-		system("pause");
+		fclose(unixDataPtr->filePtr);
+		
 
 		break;
 
 	}
 
-	char operater;
+	char operater[1];
 
-	scanf ( "%c", &operater);
+	scanf ( "%s", &operater);
 
-/*	if(operater == '>' && unixDataPtr->unixCmd == cat)
+	if(*operater == '>' && unixDataPtr->unixCmd == cat)
 	{
-		char nextFileName[40];
-		char* dynamicBufferPtr4;
-		char* dynamicBufferPtr;
-		int  size;
 
-		scanf("%s", &nextFileName);
+		scanf("%s", &unixDataPtr->nextFileName);
 
-		dynamicBufferPtr4 = (char*)malloc(40);
+		unixDataPtr->dynamicBufferPtr3 = (char*)malloc(40);
 
-		strcpy(dynamicBufferPtr4, nextFileName);
+		strcpy(unixDataPtr->dynamicBufferPtr3, unixDataPtr->nextFileName);
 
-		FILE *nextFilePtr;
 
-		nextFilePtr = fopen(dynamicBufferPtr4, "w");
+		unixDataPtr->nextFilePtr = fopen(unixDataPtr->dynamicBufferPtr3, "w");
 
-		FILE *filePtr;
+		openFile(unixDataPtr);
 
-		char *asciiPtr1;
-
-		filePtr = fopen(, "r");
-
-		if(filePtr != NULL)
+		if(unixDataPtr->dynamicBufferPtr != NULL)
 		{
-			fseek(filePtr, 1, SEEK_END);
-			size = ftell(filePtr);
-			fseek(filePtr, 1, SEEK_SET);
+			fread( unixDataPtr->dynamicBufferPtr, sizeof(char), unixDataPtr->size, unixDataPtr->filePtr);
+			unixDataPtr->asciiPtr1 = unixDataPtr->dynamicBufferPtr;
+		}
 
-			dynamicBufferPtr = (char*)malloc(size+1);
+		for( int i=unixDataPtr->size ; i>0 ;i--)
+		{
+			fprintf(unixDataPtr->nextFilePtr ,"%c", *unixDataPtr->asciiPtr1);
+			unixDataPtr->asciiPtr1++;
+		}
 
-			for( int i=0;i<size;i++)
+		fclose(unixDataPtr->filePtr);
+		fclose(unixDataPtr->nextFilePtr);
+	}
+
+	else if(*operater == '>' && unixDataPtr->unixCmd == removetag)
+	{
+
+		scanf("%s", &unixDataPtr->nextFileName);
+
+		unixDataPtr->dynamicBufferPtr3 = (char*)malloc(40);
+
+		strcpy(unixDataPtr->dynamicBufferPtr3, unixDataPtr->nextFileName);
+
+
+		unixDataPtr->nextFilePtr = fopen(unixDataPtr->dynamicBufferPtr3, "w");
+
+		openFile(unixDataPtr);
+
+		if(unixDataPtr->dynamicBufferPtr != NULL)
+		{
+			fread( unixDataPtr->dynamicBufferPtr, sizeof(char), unixDataPtr->size, unixDataPtr->filePtr);
+			unixDataPtr->asciiPtr1 = unixDataPtr->dynamicBufferPtr;
+		}
+
+		for( int i=unixDataPtr->size ; i>0 ;i--)
+		{
+			if( *unixDataPtr->asciiPtr1 !='='&& *unixDataPtr->asciiPtr1 !='+'&& *unixDataPtr->asciiPtr1 != ',' && *unixDataPtr->asciiPtr1 !='.' && *unixDataPtr->asciiPtr1 !='/'&&  *unixDataPtr->asciiPtr1 != '"'&& *unixDataPtr->asciiPtr1 != '!' && *unixDataPtr->asciiPtr1 !='-'&& *unixDataPtr->asciiPtr1 !=';'&& *unixDataPtr->asciiPtr1 !='('&& *unixDataPtr->asciiPtr1 !=')')
 			{
-				dynamicBufferPtr[i] = '\0';
+				fprintf(unixDataPtr->nextFilePtr ,"%c", *unixDataPtr->asciiPtr1);
+				unixDataPtr->asciiPtr1++;
+			}
+			else
+			{
+				unixDataPtr->asciiPtr1++;
 			}
 		}
 
-		if(dynamicBufferPtr != NULL)
-		{
-			fread( dynamicBufferPtr, sizeof(char), size, filePtr);
-			asciiPtr1 = dynamicBufferPtr;
-		}
-
-		for( int i=size ; i>0 ;i--)
-		{
-			fprintf(nextFilePtr ,"%c", *asciiPtr1);
-			asciiPtr1++;
-		}
-
-		fclose(filePtr);
-		fclose(nextFilePtr);
-	}*/
-
+		fclose(unixDataPtr->filePtr);
+		fclose(unixDataPtr->nextFilePtr);
+	}
+	system("pause");
 
 	return 1;
 }
