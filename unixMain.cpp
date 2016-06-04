@@ -87,21 +87,128 @@ int main( int argc, char *argv[])
 			printf( "%c", *asciiPtr);
 			asciiPtr++;
 		}
+
+		fclose(filePtr);
 		system("pause");
 		break;
 	case removetag:
+		//char* dynamicBufferPtr;
+		//char* dynamicBufferPtr2;
+		//int size;
+		//char fileName[40];
+
+		scanf( "%s", &fileName);
+
+		dynamicBufferPtr2 = (char*)malloc(40);
+
+		strcpy(dynamicBufferPtr2, fileName);
+
+		//argv[1] = dynamicBufferPtr2;
+
+		//free(dynamicBufferPtr2);
+
+		//FILE *filePtr;
+
+		//char *asciiPtr;
+
+		filePtr = fopen(dynamicBufferPtr2, "r");
+
+		if(filePtr != NULL)
+		{
+			fseek(filePtr, 1, SEEK_END);
+			size = ftell(filePtr);
+			fseek(filePtr, 1, SEEK_SET);
+
+			dynamicBufferPtr = (char*)malloc(size+1);
+
+			for( int i=0;i<size;i++)
+			{
+				dynamicBufferPtr[i] = '\0';
+			}
+		}
+
+		if(dynamicBufferPtr != NULL)
+		{
+			fread( dynamicBufferPtr, sizeof(char), size, filePtr);
+			asciiPtr = dynamicBufferPtr;
+		}
+
+		for( int i=size ; i>0 ;i--)
+		{
+			if( *asciiPtr !='='&& *asciiPtr !='+'&& *asciiPtr != ',' && *asciiPtr !='.' && *asciiPtr !='/'&&  *asciiPtr != '"'&& *asciiPtr != '!' && *asciiPtr !='-'&& *asciiPtr !=';'&& *asciiPtr !='('&& *asciiPtr !=')')
+			{
+				printf( "%c", *asciiPtr);
+				asciiPtr++;
+			}
+			else
+			{
+				asciiPtr++;
+			}
+		}
+
+		fclose(filePtr);
+		system("pause");
+
 		break;
 
 	}
 
+	char operater;
 
+	scanf ( "%c", &operater);
 
+/*	if(operater == '>' && unixDataPtr->unixCmd == cat)
+	{
+		char nextFileName[40];
+		char* dynamicBufferPtr4;
+		char* dynamicBufferPtr;
+		int  size;
 
+		scanf("%s", &nextFileName);
 
+		dynamicBufferPtr4 = (char*)malloc(40);
 
+		strcpy(dynamicBufferPtr4, nextFileName);
 
+		FILE *nextFilePtr;
 
+		nextFilePtr = fopen(dynamicBufferPtr4, "w");
 
+		FILE *filePtr;
+
+		char *asciiPtr1;
+
+		filePtr = fopen(, "r");
+
+		if(filePtr != NULL)
+		{
+			fseek(filePtr, 1, SEEK_END);
+			size = ftell(filePtr);
+			fseek(filePtr, 1, SEEK_SET);
+
+			dynamicBufferPtr = (char*)malloc(size+1);
+
+			for( int i=0;i<size;i++)
+			{
+				dynamicBufferPtr[i] = '\0';
+			}
+		}
+
+		if(dynamicBufferPtr != NULL)
+		{
+			fread( dynamicBufferPtr, sizeof(char), size, filePtr);
+			asciiPtr1 = dynamicBufferPtr;
+		}
+
+		for( int i=size ; i>0 ;i--)
+		{
+			fprintf(nextFilePtr ,"%c", *asciiPtr1);
+			asciiPtr1++;
+		}
+
+		fclose(filePtr);
+		fclose(nextFilePtr);
+	}*/
 
 
 	return 1;
