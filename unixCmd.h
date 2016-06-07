@@ -2,7 +2,7 @@
 #define _UNIX_H
 
 
-enum UNIXCMD{cat,removetag};
+enum UNIXCMD{cat,removetag,notdefined};
 
 struct UNIX_DATA
 {
@@ -26,6 +26,8 @@ struct UNIX_DATA
 	char* asciiPtr1;
 
 	char nextFileName[40];
+
+	int result;
 	
 
 	UNIXCMD unixCmd;

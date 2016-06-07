@@ -16,7 +16,7 @@ int main( int argc, char *argv[])
 {
 	bool run;
 	run = true;
-	
+
 	while(run == true)
 	{
 		readCmd(unixDataPtr);
@@ -58,22 +58,25 @@ int main( int argc, char *argv[])
 
 			//free(dynamicBufferPtr2);
 
-			openFile(unixDataPtr);
+			unixDataPtr->result = openFile(unixDataPtr);
 
-			if(unixDataPtr->dynamicBufferPtr != NULL)
+			if(unixDataPtr->result == 1)
 			{
-				fread( unixDataPtr->dynamicBufferPtr, sizeof(char), unixDataPtr->size, unixDataPtr->filePtr);
-				unixDataPtr->asciiPtr = unixDataPtr->dynamicBufferPtr;
-			}
 
-			for( int i=unixDataPtr->size ; i>0 ;i--)
-			{
-				printf( "%c", *unixDataPtr->asciiPtr);
-				unixDataPtr->asciiPtr++;
-			}
+				if(unixDataPtr->dynamicBufferPtr != NULL)
+				{
+					fread( unixDataPtr->dynamicBufferPtr, sizeof(char), unixDataPtr->size, unixDataPtr->filePtr);
+					unixDataPtr->asciiPtr = unixDataPtr->dynamicBufferPtr;
+				}
 
-			fclose(unixDataPtr->filePtr);
-			break;
+				for( int i=unixDataPtr->size ; i>0 ;i--)
+				{
+					printf( "%c", *unixDataPtr->asciiPtr);
+					unixDataPtr->asciiPtr++;
+				}
+
+				fclose(unixDataPtr->filePtr);
+				break;
 		case removetag:
 			scanf( "%s", &unixDataPtr->fileName);
 
@@ -118,11 +121,24 @@ int main( int argc, char *argv[])
 
 			break;
 
+			}
+		}
+		if( unixDataPtr->result ==0)
+		{
+			printf("找不到檔案路徑\n");
+			continue;
 		}
 
 		char operater[1];
 
+		*operater = '\0';
+
 		scanf ( "%s", &operater);
+
+		if(*operater == '/' && unixDataPtr->unixCmd == removetag || *operater == '/' && unixDataPtr->unixCmd == cat)
+		{
+			continue;
+		}
 
 		if(*operater == '>' && unixDataPtr->unixCmd == cat)
 		{
@@ -186,6 +202,7 @@ int main( int argc, char *argv[])
 					unixDataPtr->asciiPtr1++;
 				}
 			}
+
 
 			fclose(unixDataPtr->filePtr);
 			fclose(unixDataPtr->nextFilePtr);

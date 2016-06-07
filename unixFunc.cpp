@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <string.h>
 
 #include "unixCmd.h"
 
@@ -18,15 +19,19 @@ void readCmd(UNIX_DATA *unixDataPtr)
 
 int openFile(UNIX_DATA *unixDataPtr)
 {
-
+	if (NULL ==( unixDataPtr->filePtr = fopen(unixDataPtr->dynamicBufferPtr2, "rb")))
+	{
+		//printf("§ä¤£¨ì¸ô®|");
+		return 0;
+	}
 
 	unixDataPtr->filePtr = fopen(unixDataPtr->dynamicBufferPtr2, "r");
 
 	if(unixDataPtr->filePtr != NULL)
 	{
-		fseek(unixDataPtr->filePtr, 1, SEEK_END);
+		fseek(unixDataPtr->filePtr, 0, SEEK_END);
 		unixDataPtr->size = ftell(unixDataPtr->filePtr);
-		fseek(unixDataPtr->filePtr, 1, SEEK_SET);
+		fseek(unixDataPtr->filePtr, 0, SEEK_SET);
 
 		unixDataPtr->dynamicBufferPtr = (char*)malloc(unixDataPtr->size+1);
 
